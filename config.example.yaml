@@ -1,0 +1,18 @@
+# NcatBot 基础配置文件 (用于设置机器人身份)
+# 更多配置项请参考 ncatbot 文档
+
+# 机器人 QQ 号
+bt_uin: '123456789'
+
+# 管理员 QQ 号 (用于执行指令和权限管理)
+root: '987654321'
+
+# 调试模式
+debug: false
+
+# NapCat 连接配置
+napcat:
+  ws_uri: ws://localhost:3001
+  webui_uri: http://localhost:6099
+  webui_token: NcatBot
+  ws_token: 'NcatBot'

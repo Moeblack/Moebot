@@ -1,0 +1,56 @@
+<!-- 记忆管理 -->
+<div id="memories" class="content-section">
+    <div class="mb-6 flex justify-between items-center">
+        <div>
+            <h2 class="text-4xl font-bold text-gray-800">
+                <i class="fas fa-brain mr-3"></i>记忆管理
+            </h2>
+            <p class="text-gray-600 text-lg">查看和管理用户的记忆信息</p>
+        </div>
+        <button class="px-6 py-3 bg-white text-blue-600 rounded-xl hover:bg-blue-50 shadow-md border border-blue-200 transition-all active:scale-95 flex items-center" onclick="loadMemories()">
+            <i class="fas fa-sync-alt mr-2"></i>刷新数据
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-pink-500">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-heart mr-2 text-pink-600"></i>
+                    印象记忆
+                </h3>
+                <div class="relative">
+                    <input type="text" id="impressions-search" class="pl-8 pr-3 py-1 border rounded-full text-xs focus:ring-2 focus:ring-pink-500 outline-none" placeholder="搜索用户..." oninput="filterMemories('impressions')">
+                    <i class="fas fa-search absolute left-3 top-2 text-gray-400 text-[10px]"></i>
+                </div>
+            </div>
+            <div id="impressions" class="space-y-4 max-h-[500px] overflow-y-auto pr-2"></div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-comments mr-2 text-blue-600"></i>
+                    聊天历史
+                </h3>
+                <div class="relative">
+                    <input type="text" id="chat-search" class="pl-8 pr-3 py-1 border rounded-full text-xs focus:ring-2 focus:ring-blue-500 outline-none" placeholder="搜索会话..." oninput="filterMemories('chat')">
+                    <i class="fas fa-search absolute left-3 top-2 text-gray-400 text-[10px]"></i>
+                </div>
+            </div>
+            <div id="chat-history" class="space-y-4 max-h-[500px] overflow-y-auto pr-2"></div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-purple-500">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-book mr-2 text-purple-600"></i>
+                    情节记忆
+                </h3>
+                <div class="relative">
+                    <input type="text" id="episodic-search" class="pl-8 pr-3 py-1 border rounded-full text-xs focus:ring-2 focus:ring-purple-500 outline-none" placeholder="搜索会话..." oninput="filterMemories('episodic')">
+                    <i class="fas fa-search absolute left-3 top-2 text-gray-400 text-[10px]"></i>
+                </div>
+            </div>
+            <div id="episodic-memory" class="space-y-4 max-h-[500px] overflow-y-auto pr-2"></div>
+        </div>
+    </div>
+</div>

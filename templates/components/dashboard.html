@@ -1,0 +1,103 @@
+<!-- 仪表盘 -->
+<div id="dashboard" class="content-section active">
+    <div class="mb-6">
+        <h2 class="text-4xl font-bold text-gray-800">
+            <i class="fas fa-chart-line mr-3"></i>仪表盘
+        </h2>
+        <p class="text-gray-600 text-lg">实时监控 AI 交互和决策情况</p>
+    </div>
+
+    <!-- 活跃任务监控 -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold text-gray-800">
+                <i class="fas fa-spinner fa-spin mr-2 text-blue-500"></i>
+                实时处理队列
+            </h3>
+            <span class="badge bg-blue-500 text-white" id="active-tasks-count">活跃: 0</span>
+        </div>
+        <div id="active-tasks-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- 活跃任务卡片将在这里渲染 -->
+            <div class="col-span-full py-8 text-center bg-white rounded-xl shadow-inner border-2 border-dashed border-gray-200 text-gray-400">
+                <i class="fas fa-ghost mb-2 text-4xl block"></i>
+                暂无活跃处理任务
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">AI 交互次数</p>
+                    <p class="text-3xl font-bold text-gray-800" id="ai-logs-count">0</p>
+                </div>
+                <div class="bg-blue-100 p-4 rounded-full">
+                    <i class="fas fa-exchange-alt text-blue-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">AI 决策次数</p>
+                    <p class="text-3xl font-bold text-gray-800" id="ai-decisions-count">0</p>
+                </div>
+                <div class="bg-green-100 p-4 rounded-full">
+                    <i class="fas fa-brain text-green-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">配置变更次数</p>
+                    <p class="text-3xl font-bold text-gray-800" id="config-changes-count">0</p>
+                </div>
+                <div class="bg-yellow-100 p-4 rounded-full">
+                    <i class="fas fa-history text-yellow-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center justify-between">
+                <span><i class="fas fa-users mr-2 text-purple-600"></i>用户活跃度排行</span>
+                <span class="text-xs font-normal text-gray-400">最近活跃用户</span>
+            </h3>
+            <div id="user-activity-list" class="space-y-4">
+                <div class="py-4 text-center text-gray-400">正在加载数据...</div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-history mr-2 text-yellow-600"></i>
+                最近配置变更
+            </h3>
+            <div id="recent-config-changes" class="space-y-3"></div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-clock mr-2 text-blue-600"></i>
+                最近 AI 交互
+            </h3>
+            <div id="recent-ai-logs" class="space-y-3"></div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-brain mr-2 text-green-600"></i>
+                最近 AI 决策
+            </h3>
+            <div id="recent-ai-decisions" class="space-y-3"></div>
+        </div>
+    </div>
+</div>

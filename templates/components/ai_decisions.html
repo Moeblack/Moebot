@@ -1,0 +1,49 @@
+<!-- AI 决策记录 -->
+<div id="ai-decisions" class="content-section">
+    <div class="mb-6">
+        <h2 class="text-4xl font-bold text-gray-800">
+            <i class="fas fa-brain mr-3"></i>AI 决策记录
+        </h2>
+        <p class="text-gray-600 text-lg">查看 AI 决策过程和结果</p>
+    </div>
+
+    <div class="bg-white shadow-xl rounded-xl overflow-hidden">
+        <div class="p-6 border-b flex justify-between items-center">
+            <div>
+                <button class="filter-btn px-4 py-2 bg-gray-200 rounded-lg mr-2 active" data-filter="all">
+                    <i class="fas fa-list mr-2"></i>全部
+                </button>
+                <button class="filter-btn px-4 py-2 bg-gray-200 rounded-lg mr-2" data-filter="entry">
+                    <i class="fas fa-door-open mr-2"></i>准入决策
+                </button>
+                <button class="filter-btn px-4 py-2 bg-gray-200 rounded-lg mr-2" data-filter="micro">
+                    <i class="fas fa-search mr-2"></i>微观决策
+                </button>
+                <button class="filter-btn px-4 py-2 bg-gray-200 rounded-lg mr-2" data-filter="macro">
+                    <i class="fas fa-chart-pie mr-2"></i>宏观决策
+                </button>
+            </div>
+            <div>
+                <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600" onclick="clearLogs('ai_decisions')">
+                    <i class="fas fa-trash mr-2"></i>清除记录
+                </button>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">时间</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">类型</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">会话</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">决策结果</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">原因</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">耗时</th>
+                    </tr>
+                </thead>
+                <tbody id="ai-decisions-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<!-- 详细信息模态框 -->
+<div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 modal" onclick="if(event.target === this) closeModal()">
+    <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+        <div class="p-6 border-b">
+            <h3 class="text-2xl font-bold text-gray-800" id="modal-title">详细信息</h3>
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onclick="closeModal()">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <pre id="modal-content" class="bg-gray-100 p-4 rounded-lg"></pre>
+        </div>
+    </div>
+</div>

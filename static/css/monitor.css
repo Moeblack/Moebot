@@ -1,0 +1,117 @@
+.nav-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.nav-item:hover {
+    background-color: #f3f4f6;
+    transform: translateX(5px);
+}
+.nav-item.active {
+    background-color: #e5e7eb;
+    font-weight: bold;
+    border-left: 4px solid #3b82f6;
+}
+.content-section {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+.content-section.active {
+    display: block;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+pre {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.filter-btn {
+    transition: all 0.2s ease;
+}
+.filter-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.filter-btn.active {
+    background-color: #3b82f6;
+    color: white;
+}
+.stat-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+.persona-card {
+    transition: all 0.3s ease;
+}
+.persona-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.config-item {
+    transition: all 0.2s ease;
+}
+.config-item:hover {
+    background-color: #f9fafb;
+}
+.modal {
+    animation: modalFadeIn 0.3s ease-in-out;
+}
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+.btn-success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    transition: all 0.3s ease;
+}
+.btn-success:hover {
+    background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(56, 239, 125, 0.3);
+}
+.btn-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    transition: all 0.3s ease;
+}
+.btn-warning:hover {
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+}
+.btn-danger {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    transition: all 0.3s ease;
+}
+.btn-danger:hover {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+}
+.gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.badge:hover {
+    transform: scale(1.05);
+}

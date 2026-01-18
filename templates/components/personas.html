@@ -1,0 +1,70 @@
+<!-- 人格认知管理 -->
+<div id="personas" class="content-section">
+    <div class="mb-6">
+        <h2 class="text-4xl font-bold text-gray-800">
+            <i class="fas fa-user-tag mr-3"></i>人格认知管理
+        </h2>
+        <p class="text-gray-600 text-lg">动态管理用户的人格特征</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 第一列：核心人格 (Soul) -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-yellow-500">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-star mr-2 text-yellow-600"></i>
+                    基础人格定义
+                </h3>
+                <div class="group relative">
+                    <i class="fas fa-question-circle text-gray-400 cursor-help"></i>
+                    <div class="absolute bottom-full right-0 mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        决定了 AI 的本质身份、开发者信息及核心三观。这是 AI 进化的“锚点”。
+                    </div>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mb-4">决定 AI 的底层逻辑与身份认同</p>
+            <div id="base-personas" class="space-y-4"></div>
+            <div class="mt-6 pt-4 border-t border-gray-100">
+                <button class="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 shadow-md transition-all active:scale-95" onclick="showAddPersonaModal()">
+                    <i class="fas fa-plus mr-2"></i>创建新人格
+                </button>
+            </div>
+        </div>
+
+        <!-- 第二列：运行时映射 (Mapping) -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-users mr-2 text-green-600"></i>
+                    活跃 Persona
+                </h3>
+                <div class="group relative">
+                    <i class="fas fa-question-circle text-gray-400 cursor-help"></i>
+                    <div class="absolute bottom-full right-0 mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        展示当前每个用户或群聊正在与哪个人格进行对话。
+                    </div>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mb-4">当前会话的人格映射状态</p>
+            <div id="active-personas" class="space-y-4"></div>
+        </div>
+
+        <!-- 第三列：初始特质 (Seed Traits) -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-purple-500">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-user-friends mr-2 text-purple-600"></i>
+                    初始人格特质
+                </h3>
+                <div class="group relative">
+                    <i class="fas fa-question-circle text-gray-400 cursor-help"></i>
+                    <div class="absolute bottom-full right-0 mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        新会话开启时的初始行为准则。这些条目会随着聊天不断发生“自我演化”。
+                    </div>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mb-4">新会话的种子行为规则</p>
+            <div id="initial-traits" class="space-y-4"></div>
+        </div>
+    </div>
+</div>

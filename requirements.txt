@@ -1,0 +1,11 @@
+# 核心框架建议手动按以下方式安装以确保版本最新：
+# pip install ncatbot -U -i https://mirrors.aliyun.com/pypi/simple/
+ncatbot
+httpx
+PyYAML
+fastapi
+uvicorn
+jinja2
+python-multipart
+python-dotenv
+Pillow

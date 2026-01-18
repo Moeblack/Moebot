@@ -1,0 +1,48 @@
+# MoeBot 代理配置文件示例
+
+# 记忆配置
+memory:
+  high_watermark: 50           # 历史记录高水位线，超过后触发压缩/总结
+  summary_interval: 35         # 总结间隔
+  enable_episodic: true        # 是否启用情节记忆
+
+# 交互配置
+interaction:
+  response_wait_time: 2        # 私聊响应等待时间 (秒)
+  group_response_wait_time: 5  # 群聊响应等待时间 (秒)
+  group_focus_window: 300      # 群聊关注窗口 (秒)
+  group_passive_record_chance: 0.1 # 群聊被动记录概率
+  group_passive_sampling_threshold: 10 # 群聊被动采样阈值
+  focus_micro_interval: 5      # 微观关注检查间隔
+  focus_macro_interval: 60     # 宏观关注检查间隔
+  whitelist: []                # 用户白名单 (QQ号列表)
+  group_whitelist: []          # 群组白名单 (群号列表)
+  default_persona: "default"   # 默认人格名称
+  enable_social_energy: false  # 是否启用社交能量 (注：该模块目前尚未完善，设计意图尚不清晰，建议保持关闭)
+  enable_topic_detection: false # [实验功能] 是否启用话题检测 (注：该功能设计的并不好，目的不清晰，功能不完善，建议保持关闭)
+
+# 多模态配置
+multimodal:
+  compress_to_webp: true       # 是否将图片压缩为 webp
+  group_image_mode: "mention"  # 群聊图片模式 (mention: 仅被提及时处理, all: 处理所有)
+
+# AI 配置
+ai:
+  global_switch: true          # 全局开关
+  mention_mode_only: false     # 是否仅在被艾特时响应
+  enable_group: true           # 是否开启群聊
+  enable_private: true         # 是否开启私聊
+  show_thinking: false         # 是否在回复中显示思考过程
+  force_no_thinking_instruction: false # 是否强制添加不进行思考的指令
+  intro_wait_time: 2           # 自我介绍等待时间
+
+# 人格定义
+persona_definitions:
+  default: "我是 @Moeblack 开发的人工智能bot。性格友好、专业且简练。我具备长期记忆和性格演化功能。注意：我厌恶在群聊中长篇大论，更倾向于言简意赅的表达。"
+
+# 初始特质
+initial_traits:
+  default:
+    - "拥有长期记忆和自动情感演化功能"
+    - "会根据不同的用户调整交互模式"
+    - "群聊环境禁止长篇大论，说话点到为止"
