@@ -41,6 +41,16 @@ async def handle_group_message(event: GroupMessageEvent):
     is_root_msg = event.user_id == ncatbot_config.root
     # 兼容配置里群号是 int 或 str 的情况
     is_whitelisted_group = str(event.group_id) in {str(g) for g in config.GROUP_WHITELIST}
+
+    # ---- 关键修复：AI 的“活动判定”不得绕过白名单 ----
+    # 说明：之前的逻辑把 state.is_in_focus / is_in_focus_window / should_trigger 也纳入了 is_active，
+    # 会导致：只要某群曾进入过专注或命中触发词，即使不在 GROUP_WHITELIST 也会继续触发 AI。
+    # 正确做法：
+    # - 非 Root 且非白名单群：直接 return（仅保留与 AI 解耦的其它功能，例如 B 站卡片）。
+    # - Root / 白名单群：才允许继续进入后续 AI 触发判定。
+    if not (is_root_msg or is_whitelisted_group):
+        return
+
     # 专注模式判断：显式专注位 或 时间窗口
     is_in_focus_window = (now - state.last_interaction_time) < config.GROUP_FOCUS_WINDOW
 
@@ -48,13 +58,13 @@ async def handle_group_message(event: GroupMessageEvent):
     trigger_name = config.DEFAULT_PERSONA_NAME
     is_named = trigger_name.lower() in raw_msg.lower()
     should_trigger = is_at_me or is_named
-    
-    # 仅在提及模式下的触发逻辑修正
-    if config.AI_MENTION_ONLY and not should_trigger:
-        is_active = False # 即使在专注模式，如果不被提，也不活动
+
+    # 提及模式：如果开启 AI_MENTION_ONLY，则必须被 @ 或命中唤醒词；否则允许专注窗口内继续对话
+    if config.AI_MENTION_ONLY:
+        is_active = should_trigger
     else:
-        is_active = is_root_msg or is_whitelisted_group or state.is_in_focus or is_in_focus_window or should_trigger
-    
+        is_active = state.is_in_focus or is_in_focus_window or should_trigger or is_root_msg
+
     if not is_active:
         return
 
@@ -90,19 +100,7 @@ async def handle_group_message(event: GroupMessageEvent):
             return
 
     # --- AI 准入鉴权 ---
-    # 只有 Root 消息或白名单群才允许继续 AI 逻辑
-    if not (is_root_msg or is_whitelisted_group):
-        return
-
-    # 仅在提及模式下的触发逻辑修正
-    if config.AI_MENTION_ONLY and not should_trigger:
-        is_active = False 
-    else:
-        # 此时已知是在白名单或 Root，只要满足触发条件或处于专注状态即活跃
-        is_active = state.is_in_focus or is_in_focus_window or should_trigger or is_root_msg
-    
-    if not is_active:
-        return
+    # 前面已经做过一次“非 Root 且非白名单群直接 return”，这里不再重复鉴权与 is_active 判定。
 
     # 5. 进入决策模式：将消息入队 + 防抖触发 AI 处理
     # 说明：白名单群在 @ / 唤醒词 / 专注窗口内，都会走到这里。

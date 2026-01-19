@@ -198,6 +198,11 @@
     - 给出了推荐组合方案（A + B + 简化版C）
 
 48. **修复 Traits 正反馈偏差问题**：
+
+49. **修复群聊 AI 触发绕过白名单的问题**：
+    - 在 `bot_agent/handlers/group.py` 中修正群聊 `is_active` 判定：非 Root 且非白名单群直接 return。
+    - 避免某群一旦进入过专注/专注窗口或命中唤醒词后，即使不在白名单也持续触发 AI 的“全群随机触发”现象。
+    - 清理了重复的 AI 准入鉴权与二次 `is_active` 计算，防止逻辑漂移。
     - **输入源分离**：修改 `evolution.py`，演进分析时跳过 AI 自己的发言（`role == 'assistant'`），只分析用户消息
     - **视角转换**：将演进提示词从「AI表现出什么特征」改为「群友们希望 Assistant 是什么风格」
     - **同步更新**：`data/prompts.json` 和 `bot_agent/memory/prompt_defaults.py` 的 `personality_evolution` 模板
