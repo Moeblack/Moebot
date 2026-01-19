@@ -299,3 +299,7 @@
     - `interaction.bilibili_link_extract_private`（私聊默认 true）
     - `interaction.bilibili_link_extract_groups`（群聊单独列表，只有这些群启用）
   - 已完成：私聊侧增加降噪触发条件：仅当消息含 Json/XML/Share 段或文本含 b23/bilibili 提示时才尝试解析。
+
+- 修复：白名单群 @ 机器人未进入决策模式
+  - git 最新提交 `3155d44` 在 `handlers/group.py` 里误删了“消息入队 + 防抖触发 wait_and_trigger”这一段，导致通过鉴权后直接 return。
+  - 已在 `bot_agent/handlers/group.py` 恢复：鉴权通过后将 event 追加到 `state.message_queue`，并创建 `state.timer_task = asyncio.create_task(wait_and_trigger(...))` 进入决策流程。

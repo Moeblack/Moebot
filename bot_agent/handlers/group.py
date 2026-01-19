@@ -103,3 +103,12 @@ async def handle_group_message(event: GroupMessageEvent):
     
     if not is_active:
         return
+
+    # 5. 进入决策模式：将消息入队 + 防抖触发 AI 处理
+    # 说明：白名单群在 @ / 唤醒词 / 专注窗口内，都会走到这里。
+    # 之前的更新误删了这一段，导致消息通过鉴权后直接 return，从而看起来“没进入决策模式”。
+    state.message_queue.append(event)
+    if state.timer_task:
+        state.timer_task.cancel()
+    state.timer_task = asyncio.create_task(wait_and_trigger(group_id, is_group=True, is_auto_trigger=False))
+    return
