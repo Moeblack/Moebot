@@ -72,6 +72,7 @@ class ConfigManager:
         global INT_CONF, RESPONSE_WAIT_TIME, GROUP_RESPONSE_WAIT_TIME, GROUP_FOCUS_WINDOW
         global GROUP_PASSIVE_RECORD_CHANCE, GROUP_PASSIVE_SAMPLING_THRESHOLD
         global FOCUS_MICRO_INTERVAL, FOCUS_MACRO_INTERVAL, WHITELIST, GROUP_WHITELIST, DEFAULT_PERSONA_NAME, ENABLE_SOCIAL_ENERGY, ENABLE_TOPIC_DETECTION
+        global BILIBILI_LINK_EXTRACT_PRIVATE, BILIBILI_LINK_EXTRACT_GROUPS
         global MULTI_CONF, COMPRESS_TO_WEBP, GROUP_IMAGE_MODE
         global AI_CONF, AI_GLOBAL_SWITCH, AI_MENTION_ONLY, AI_ENABLE_GROUP, AI_ENABLE_PRIVATE, AI_SHOW_THINKING, AI_FORCE_NO_THINK_INST, AI_INTRO_WAIT_TIME
         global BASE_PERSONA_CONFIG, INITIAL_TRAITS
@@ -102,6 +103,10 @@ class ConfigManager:
         DEFAULT_PERSONA_NAME = INT_CONF.get("default_persona", "default")
         ENABLE_SOCIAL_ENERGY = INT_CONF.get("enable_social_energy", False)
         ENABLE_TOPIC_DETECTION = INT_CONF.get("enable_topic_detection", False)
+
+        # B站链接提取服务（与 AI 开关解耦）
+        BILIBILI_LINK_EXTRACT_PRIVATE = INT_CONF.get("bilibili_link_extract_private", True)
+        BILIBILI_LINK_EXTRACT_GROUPS = INT_CONF.get("bilibili_link_extract_groups", [])
         
         MULTI_CONF = self._config.get("multimodal", {})
         COMPRESS_TO_WEBP = MULTI_CONF.get("compress_to_webp", True)

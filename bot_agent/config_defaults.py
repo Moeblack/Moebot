@@ -16,7 +16,13 @@ DEFAULT_CONFIG = {
         "whitelist": [],
         "default_persona": "default",
         "enable_social_energy": False,
-        "enable_topic_detection": False
+        "enable_topic_detection": False,
+
+        # B站链接提取服务（与 AI 开关解耦）
+        # - 私聊：默认开启（但仍受 whitelist/root 鉴权约束）
+        # - 群聊：仅对配置的群号开启
+        "bilibili_link_extract_private": True,
+        "bilibili_link_extract_groups": []
     },
     "multimodal": {
         "compress_to_webp": True,

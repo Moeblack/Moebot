@@ -12,6 +12,7 @@ from .base import SessionState
 from .processor import wait_and_trigger
 from .processor_utils import record_session_batch, fetch_and_inject_history
 from .commands import handle_commands
+from .link_utils.card_shortener import try_extract_and_shorten_bilibili_from_event
 
 async def handle_group_message(event: GroupMessageEvent):
     """群聊消息处理器"""
@@ -38,7 +39,8 @@ async def handle_group_message(event: GroupMessageEvent):
 
     # 3. 鉴权与过滤：Root、白名单群、处于专注模式、或触发消息
     is_root_msg = event.user_id == ncatbot_config.root
-    is_whitelisted_group = event.group_id in config.GROUP_WHITELIST
+    # 兼容配置里群号是 int 或 str 的情况
+    is_whitelisted_group = str(event.group_id) in {str(g) for g in config.GROUP_WHITELIST}
     # 专注模式判断：显式专注位 或 时间窗口
     is_in_focus_window = (now - state.last_interaction_time) < config.GROUP_FOCUS_WINDOW
 
@@ -77,6 +79,15 @@ async def handle_group_message(event: GroupMessageEvent):
     if raw_msg.startswith(config.COMMAND_PREFIX):
         await handle_commands(event, group_id, raw_msg, is_group=True)
         return
+
+    # 4.6 B站链接提取服务（与 AI 功能解耦）
+    # 说明：QQ 的 B 站卡片一般以 Json/XML/Share 段出现，raw_message 可能不包含可直接复制的链接。
+    # 群聊仅对 bilibili_link_extract_groups 中配置的群号启用。
+    if str(event.group_id) in {str(g) for g in config.BILIBILI_LINK_EXTRACT_GROUPS}:
+        short = try_extract_and_shorten_bilibili_from_event(event)
+        if short:
+            await event.reply(text=short, at=False)
+            return
 
     # 5. 消息去重
     if event.message_id in state.seen_messages:

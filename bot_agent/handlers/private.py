@@ -10,6 +10,7 @@ from .base import SessionState
 from .processor import wait_and_trigger
 from .processor_utils import record_session_batch
 from .commands import handle_commands
+from .link_utils.card_shortener import try_extract_and_shorten_bilibili_from_event
 
 async def handle_private_message(event: PrivateMessageEvent):
     """私聊消息处理器"""
@@ -17,11 +18,11 @@ async def handle_private_message(event: PrivateMessageEvent):
     if not config.AI_GLOBAL_SWITCH or not config.AI_ENABLE_PRIVATE:
         return
 
-    # 鉴权：root 或在白名单中
+    # 鉴权：root 或在白名单中（root 默认视为白名单成员）
     is_root = event.user_id == ncatbot_config.root
-    is_whitelisted = event.user_id in config.WHITELIST
+    is_whitelisted = is_root or (str(event.user_id) in {str(u) for u in config.WHITELIST})
     
-    if not (is_root or is_whitelisted):
+    if not is_whitelisted:
         return
 
     user_id = str(event.user_id)
@@ -48,6 +49,20 @@ async def handle_private_message(event: PrivateMessageEvent):
     if raw_msg.startswith(config.COMMAND_PREFIX):
         await handle_commands(event, user_id, raw_msg, is_group=False)
         return
+
+    # 1.1 私聊：B 站卡片/链接提取服务（与 AI 功能解耦）
+    # - 私聊默认开启（但仍受 whitelist/root 鉴权约束）
+    # - 为了降噪：仅在消息里出现 Json/XML/Share 段，或文本里明确包含 b23/bilibili 时才尝试解析
+    if config.BILIBILI_LINK_EXTRACT_PRIVATE:
+        has_card_seg = any(seg.msg_seg_type in ("json", "xml", "share") for seg in event.message)
+        has_hint = ("b23.tv" in raw_msg) or ("bilibili.com" in raw_msg) or ("[CQ:json" in raw_msg) or ("[CQ:xml" in raw_msg)
+        if has_card_seg or has_hint:
+            short = try_extract_and_shorten_bilibili_from_event(event)
+            if short:
+                debug_print(1, f"私聊检测到B站卡片/链接，提取链接: {short}")
+                # ncatbot 的私聊 reply 不支持 at 参数
+                await event.reply(text=short)
+                return
 
     # 2. 获取或创建用户状态
     if user_id not in base.user_states:

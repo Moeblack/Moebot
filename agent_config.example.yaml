@@ -21,6 +21,10 @@ interaction:
   enable_social_energy: false  # 是否启用社交能量 (注：该模块目前尚未完善，设计意图尚不清晰，建议保持关闭)
   enable_topic_detection: false # [实验功能] 是否启用话题检测 (注：该功能设计的并不好，目的不清晰，功能不完善，建议保持关闭)
 
+  # B站链接提取服务（与 AI 功能解耦）
+  bilibili_link_extract_private: true   # 私聊默认开启
+  bilibili_link_extract_groups: []      # 群聊仅对这里配置的群号启用
+
 # 多模态配置
 multimodal:
   compress_to_webp: true       # 是否将图片压缩为 webp

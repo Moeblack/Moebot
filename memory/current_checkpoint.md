@@ -269,10 +269,33 @@
     - 实现了私聊 `ignore` 动作的完全静默处理（不发送任何内容）。
     - 统一了私聊与群聊专注模式下的决策 Schema。
 
+ 51. **项目正式开源 (GitHub Open Source)**: 
+    - 成功识别并配置了用户提供的 SSH 私钥 (`logs/id_ed25519`)。
+    - 验证了与 GitHub 的 SSH 连接 (Hi Moeblack!)。
+    - 关联了远程仓库 `git@github.com:Moeblack/MoeBot.git`。
+    - 执行了强行推送 (`git push -f origin main`)，将 MoeBot 框架正式发布至 GitHub。
+    - 使用 `gh` 工具将仓库设置为公开状态 (Public)。
+    - 确认提交身份为 `Moeblack <kuroinekorachi@gmail.com>`。
+
 ## 待办事项
 1. [x] 验证 `requirements.txt` 中的依赖是否完整。
 2. [ ] 准备开源发布的发布说明。
 
 ## 下一步行动
 
-- 等待用户指令
+- 已将「B 站卡片/链接 → 短链」抽成通用函数 `try_extract_and_shorten_bilibili_from_event()`，群聊/私聊共用。
+- 私聊侧：白名单用户（含 root，root 默认视为白名单成员）收到 B 站卡片/链接会自动回复短链，并在入队与 AI 决策之前提前返回。
+- 如需增加开关/只处理卡片段（不处理纯文本）等更细粒度控制，再继续补充配置项与过滤规则。
+
+- 进行中：排查「私聊发送 B 站卡片/b23 链接未触发短链回复」问题：
+  - 在 `link_utils/card_shortener.py` 增加了候选文本/URL/选中链接/短链结果的 debug 日志。
+  - 在 `handlers/private.py` 增加了命中与未命中的 debug 日志，便于确认是否走到短链分支、以及 raw_message 实际内容。
+  - 已定位原因：QQ 小程序卡片把链接中的 `&` 编码成了 `&amp;`，导致 URL 正则把链接截断在 `...share_source=qq` 之前，从而丢失 `b23.tv` 域名，识别失败。
+  - 已修复：在 `link_utils/bilibili_card.py` 增加 `preprocess_card_text()`，对 `&amp;`/`&#44;`/`\\/` 做预解码后再提取 URL。
+  - 已修复：`PrivateMessageEvent.reply()` 不支持 `at` 参数，私聊发送链接改为 `await event.reply(text=...)`。
+  - 调整需求：用户不需要转短链，改为固定输出 `https://www.bilibili.com/video/BV...` 这种 BV 直链；实现方式为：b23 展开一次跳转 + 清追踪参数 + 正则提取 BV 并格式化输出。
+  - 已完成：关闭 `card_shortener.py` 内用于排查的 `[bili-shortener]` debug 输出，避免刷屏。
+  - 已完成：将「B站链接提取服务」与 AI 开关解耦，新增配置项：
+    - `interaction.bilibili_link_extract_private`（私聊默认 true）
+    - `interaction.bilibili_link_extract_groups`（群聊单独列表，只有这些群启用）
+  - 已完成：私聊侧增加降噪触发条件：仅当消息含 Json/XML/Share 段或文本含 b23/bilibili 提示时才尝试解析。
