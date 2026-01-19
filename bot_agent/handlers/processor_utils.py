@@ -1,6 +1,6 @@
 from typing import Union
 from ncatbot.core.event import PrivateMessageEvent, GroupMessageEvent
-from ncatbot.core.event.message_segment import Image, Text, At, Face, PlainText, AtAll, Reply
+from ncatbot.core.event.message_segment import Image, Text, At, Face, PlainText, AtAll, Reply, Json, XML, Share
 from ncatbot.utils import ncatbot_config
 from ..memory import memory_manager
 from .. import config
@@ -8,7 +8,11 @@ from ..utils import format_timestamp
 from ..monitor import record_user_activity
 
 def parse_event_message(event: Union[PrivateMessageEvent, GroupMessageEvent], bot_uin: str) -> str:
-    """解析消息事件中的消息段，转换为文本描述"""
+    """解析消息事件中的消息段，转换为文本描述
+
+    注意：部分消息（如 B 站/小程序卡片）会以 Json/XML/Share 段出现；
+    若不显式处理，会导致工作记忆里只剩一坨 CQ 码或空串。
+    """
     content_parts = []
     for seg in event.message:
         if isinstance(seg, (Text, PlainText)):
@@ -23,6 +27,12 @@ def parse_event_message(event: Union[PrivateMessageEvent, GroupMessageEvent], bo
             content_parts.append("@全体成员 ")
         elif isinstance(seg, Reply):
             content_parts.append("[回复] ")
+        elif isinstance(seg, Share):
+            content_parts.append(f"[分享卡片] {seg.title} {seg.url}")
+        elif isinstance(seg, (Json, XML)):
+            # 这里不展开内容，避免 prompt 污染，但保留可检索链接的线索
+            content_parts.append(f"[{seg.msg_seg_type}卡片]")
+
     return "".join(content_parts).strip() or event.raw_message
 
 def format_batch_to_xml(batch: list[Union[PrivateMessageEvent, GroupMessageEvent]]) -> str:

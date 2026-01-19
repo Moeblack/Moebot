@@ -77,67 +77,29 @@ async def handle_group_message(event: GroupMessageEvent):
 
     # 4.5 指令处理
     if raw_msg.startswith(config.COMMAND_PREFIX):
-        await handle_commands(event, group_id, raw_msg, is_group=True)
+        # 指令也需要鉴权：只有 root 或白名单群允许
+        if is_root_msg or is_whitelisted_group:
+            await handle_commands(event, group_id, raw_msg, is_group=True)
         return
 
-    # 4.6 B站链接提取服务（与 AI 功能解耦）
-    # 说明：QQ 的 B 站卡片一般以 Json/XML/Share 段出现，raw_message 可能不包含可直接复制的链接。
-    # 群聊仅对 bilibili_link_extract_groups 中配置的群号启用。
+    # 4.6 B站链接提取服务（与 AI 功能解耦，独立鉴权）
     if str(event.group_id) in {str(g) for g in config.BILIBILI_LINK_EXTRACT_GROUPS}:
         short = try_extract_and_shorten_bilibili_from_event(event)
         if short:
             await event.reply(text=short, at=False)
             return
 
-    # 5. 消息去重
-    if event.message_id in state.seen_messages:
+    # --- AI 准入鉴权 ---
+    # 只有 Root 消息或白名单群才允许继续 AI 逻辑
+    if not (is_root_msg or is_whitelisted_group):
         return
-    state.seen_messages.add(event.message_id)
-    if len(state.seen_messages) > config.DUPLICATE_QUEUE_SIZE:
-        state.seen_messages.clear()
 
-    # 6. 处理消息记录逻辑
-    event.receive_time = now  # type: ignore
-    
-    # 决定是否记录此消息
-    should_record = False
-    if is_root_msg or state.is_in_focus or is_in_focus_window:
-        should_record = True
-    elif random.random() < config.GROUP_PASSIVE_RECORD_CHANCE:
-        should_record = True
-        debug_print(0, f"群聊 {group_id} 处于低专注模式，抽样记录背景消息")
-
-    if should_record:
-        # 立即记录消息，确保 AI 回复时能看到
-        await record_session_batch(group_id, [event], is_group=True)
-
-    # 7. 触发回复逻辑
-    if state.is_in_focus:
-        # 专注模式下，只需将消息放入队列，由 run_focus_loop 处理
-        state.message_queue.append(event)
-        debug_print(0, f"群聊 {group_id} 处于专注模式，消息已入队等待 5s 扫描")
-    elif should_trigger:
-        # 非专注模式但触发了 AI，走准入决策
-        # 如果是被 @，立即尝试拉取历史上下文
-        if is_at_me:
-            asyncio.create_task(fetch_and_inject_history(group_id, is_group=True, count=config.HISTORY_INJECT_COUNT))
-            
-        state.message_queue.append(event)
-        if state.timer_task:
-            state.timer_task.cancel()
-        state.timer_task = asyncio.create_task(wait_and_trigger(group_id, is_group=True))
+    # 仅在提及模式下的触发逻辑修正
+    if config.AI_MENTION_ONLY and not should_trigger:
+        is_active = False 
     else:
-        # 非触发消息，如果是记录的消息且不在专注模式，累加计数尝试自动插话
-        if should_record:
-            state.passive_count += 1
-            if state.passive_count >= config.GROUP_PASSIVE_SAMPLING_THRESHOLD:
-                debug_print(1, f"群聊 {group_id} 背景消息累计达标，触发插话决策")
-                state.passive_count = 0
-                
-                # 在触发插话决策前，主动拉取历史上下文
-                asyncio.create_task(fetch_and_inject_history(group_id, is_group=True, count=config.HISTORY_INJECT_COUNT))
-                
-                state.message_queue.append(event)
-                if state.timer_task:
-                    state.timer_task.cancel()
-                state.timer_task = asyncio.create_task(wait_and_trigger(group_id, is_group=True, is_auto_trigger=True))
+        # 此时已知是在白名单或 Root，只要满足触发条件或处于专注状态即活跃
+        is_active = state.is_in_focus or is_in_focus_window or should_trigger or is_root_msg
+    
+    if not is_active:
+        return
