@@ -56,6 +56,12 @@ async def run_focus_loop(session_id: str, is_group: bool) -> None:
                         update_active_task(session_id, "专注模式 (微观决策中...)", len(batch))
                         micro = await asyncio.wait_for(fast_micro_decision(session_id, batch, is_group), timeout=15.0)
                         action, emoji_id, bot = micro.get("action", "ignore"), micro.get("emoji_id"), base._bot
+
+                        # 微观决策触发“立即退出专注并静默”
+                        if action == "ignore" and "退出专注" in str(micro.get("reason", "")):
+                            stop_focus_mode(session_id)
+                            break
+
                         if not bot:
                             continue
                         emoji_msg_id = None

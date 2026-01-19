@@ -38,9 +38,22 @@ async def process_session_queue(session_id: str, is_group: bool, is_auto_trigger
                     continue
                 batch, state.message_queue = state.message_queue[:], []
                 if is_group:
-                    update_active_task(session_id, "正在进行准入决策...", len(batch))
-                    decision = await fast_entry_decision(session_id, batch, is_group, is_auto_trigger=is_auto_trigger)
-                    should_reply, enter_focus = decision.get("reply", True), decision.get("enter_focus", True)
+                    # 群聊：如果已经在专注模式里，则不再走准入决策，直接走微观决策
+                    if state.is_in_focus:
+                        update_active_task(session_id, "专注模式 (微观决策中...)", len(batch))
+                        decision = await fast_micro_decision(session_id, batch, is_group)
+                        action = decision.get("action", "ignore")
+                        should_reply, enter_focus = (action == "reply"), False
+                        # 专注模式下 ignore / emoji 都不触发“主流程的文字回复生成”
+                        if action != "reply":
+                            state.last_decision = decision
+                            if not state.message_queue:
+                                break
+                            continue
+                    else:
+                        update_active_task(session_id, "正在进行准入决策...", len(batch))
+                        decision = await fast_entry_decision(session_id, batch, is_group, is_auto_trigger=is_auto_trigger)
+                        should_reply, enter_focus = decision.get("reply", True), decision.get("enter_focus", True)
                 else:
                     update_active_task(session_id, "正在决策如何回应...", len(batch))
                     decision = await fast_micro_decision(session_id, batch, is_group)

@@ -199,6 +199,16 @@
 
 48. **修复 Traits 正反馈偏差问题**：
 
+49. **专注模式体验优化（基于提示词与路由）**：
+    - 更新 `prompt_defaults.py`：在 `entry_decision` / `micro_decision` / `macro_decision` 中加入“群里任何成员表达不满意→必须静默并退出专注”的强制规则。
+    - 进一步收紧 `entry_decision` 的准入标准：默认不回复/不进入专注，仅在强信号（明确 @、点名要求回应、能显著推进话题）下才允许回复；enter_focus 需要同时满足密集时效+强相关+无反感信号。
+    - 将准入/准出规则块移动到聊天记录之后（紧贴最新输入），以降低模型遗忘概率。
+    - 优化群聊专注期路由：当群聊 `state.is_in_focus=True` 时，`processor.py` 不再走 `entry_decision`，而是直接走 `micro_decision`。
+    - 在 `processor_focus.py` 中增加对微观决策“退出专注”信号的处理：当 `action=ignore` 且 reason 包含“退出专注”时，立即停止专注循环并静默。
+    - 更新 `prompt_defaults.py`：在 `entry_decision` / `micro_decision` / `macro_decision` 中加入“群里任何成员表达不满意→必须静默并退出专注”的强制规则。
+    - 优化群聊专注期路由：当群聊 `state.is_in_focus=True` 时，`processor.py` 不再走 `entry_decision`，而是直接走 `micro_decision`。
+    - 在 `processor_focus.py` 中增加对微观决策“退出专注”信号的处理：当 `action=ignore` 且 reason 包含“退出专注”时，立即停止专注循环并静默。
+
 49. **修复群聊 AI 触发绕过白名单的问题**：
     - 在 `bot_agent/handlers/group.py` 中修正群聊 `is_active` 判定：非 Root 且非白名单群直接 return。
     - 避免某群一旦进入过专注/专注窗口或命中唤醒词后，即使不在白名单也持续触发 AI 的“全群随机触发”现象。
