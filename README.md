@@ -1,100 +1,44 @@
-# MoeBot: 高拟人化且安全的 LLM Agent 框架
+# Moebot V2 配置中心（局域网）
 
-MoeBot 是一个基于大语言模型（LLM）构建的次世代机器人框架，旨在通过复杂的记忆架构和结构化的交互协议，打造一个既能“像真人一样思考和回忆”，又具备极高抗攻击能力的智能体。
+这个仓库当前默认只保留 **V2 配置中心**，用于在局域网中管理 Moebot V2 的关键配置：
 
-## 🌟 核心深度探索
+- LLM / Embedding（Base URL、Model、API Key）
+- Gateway / Node-Host（host/port/gateway_url）
+- Memory / Context / Security / Paths 等
 
-### 0. AI 原生设计与协同开发
-本项目从设计之初就考虑到了 **AI 辅助开发**。通过高度模块化、显式的状态管理和详尽的文档，确保 AI 能够快速理解上下文并生成高质量代码。
-- **文档导航**：详细的技术文档位于 [`docs/bot-agent/`](docs/bot-agent/README.md) 目录下，涵盖了架构、配置、记忆系统及提示词工程等核心内容。
-- **协同准则**：如果你希望使用 AI 协助开发本项目，请参考 [`LIMCODE.md`](LIMCODE.md) 中的开发准则。
+旧版（V1）实现已归档到 [`legacy_v1/`](legacy_v1/README.md)，仅供参考，不再作为运行入口。
 
-### 1. XML 状态机：一道防御越狱的坚实屏障
-本项目的核心实验之一是：**将历史记录、上下文和系统指令包装在严密的 XML 标签中，并将每次请求设计为单层文档状态。**
-- **抗越狱能力**：通过 XML 标签明确界定“系统指令”、“记忆片段”和“用户输入”。这种结构化的格式使得 AI 极难被传统的提示词注入（Prompt Injection）攻击所误导，因为它能清晰地分辨哪些是背景资料，哪些是当前需要执行的指令。
-- **状态感知**：AI 不再是简单地回答问题，而是在阅读一份关于“当前自我状态”的文档后做出反应。
+## 启动
 
-### 2. 情节记忆 + 工作记忆
-实际上人类并不会事无巨细的记下所有事情。
-- **情节记忆 (Episodic Memory)**：记录长期的重要事件，类似于人类的长期记忆。
-- **工作记忆 (Working Memory)**：对近期对话的深度压缩。
+### 1) 安装依赖
 
-### 3. JSON Schema 驱动与结构化提示词
-- **结构化提示词 (Structured Prompting)**：利用 XML 标签和清晰的层级结构，将 Bot 的“思考空间”与“输出空间”严格分离。
-- **结构化输出**：通过 JSON Schema 将AI输出结构化。
-- **无缝工具调用**：结构化的输出为后续调用画图、搜索、甚至控制外部设备提供了标准的接口。
-
-### 4. 可视化监控与动态管理
-通过集成的 Web 后台管理MoeBot。
-- 记录 AI 的每一次决策，API请求。
-- 支持在线编辑、删除和修正 AI 的聊天记录、情节记忆和用户印象。（待维修、完善）
-- 实时修改系统提示词（Prompt）和人格特质。
-
-## 遗忘与复习
-
-在 MoeBot 的设计中，
-
-- **记忆复习机制 (Review Mechanism)**：我正在探索引入类似 **艾宾浩斯遗忘曲线** 的算法。目前的系统已经初步支持记忆的分类与持久化，但如何让 AI 像人一样“自动强化重要记忆、淡化无关细节”是未来试图实现的方向。
-- **现状与未来**：目前的架构已足以支撑起一个具有连贯人格的 Bot。我们正在研究如何通过周期性的“梦境处理”（异步压缩与强化）来实现更高级的记忆演化，使其更符合人类的认知规律。
-
----
-
-## 更新记录
-
-- 2026-01-19 增加了解析bilibili卡片能力。
-
-## 🚀 快速开始
-
-### 安装环境
-1. 克隆本仓库。
-2. 创建虚拟环境并安装依赖：
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Linux/macOS
-   # 或 venv\Scripts\activate  # Windows
-   pip install -r requirements.txt
-   ```
-   *注意：`ncatbot` 必须使用阿里云镜像源进行更新。*
-
-### 配置文件
-1. 将 `.env.example` 重命名为 `.env` 并填写相关 API Key。
-2. 将 `agent_config.example.yaml` 重命名为 `agent_config.yaml`。
-3. 将 `config.example.yaml` 重命名为 `config.yaml`（用于 ncatbot 基础设置）。
-
-### 运行
 ```bash
-python main.py
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
-运行后，你可以通过 `http://localhost:8000` 访问监控后台，实时查看 Bot 的决策逻辑和记忆状态。
 
----
+### 2) 准备环境变量
 
-## 🗺️ 项目路线图 (Roadmap)
+复制 `.env.example` 为 `.env` 并填写必要的 Key：
 
-我正致力于将 MoeBot 从一个特定的机器人实现转变为一个通用的 Agent 框架。
+```bash
+cp .env.example .env
+```
 
-- [ ] **第一阶段：核心解耦**
-  - 脱离对 `ncatbot` 的深度依赖，使核心逻辑可以适配不同的通讯协议（如 Telegram, Discord, Web 等）。
-- [ ] **第二阶段：插件化架构**
-  - 将 **记忆系统**（情节/工作记忆）和 **决策系统** 模块化。
-  - 将除开机器人框架和上游AI端口接口之外的所有功能模块化。让MoeBot变成一个开发平台。
-- [ ] **第三阶段：深度工具集成与多模态 (远期愿景)**
-  - 扩展工具调用能力：支持画图、搜索、语音合成（唱歌/说话）、甚至是接入具身智能（Embodied AI）等外部设备。
-  - 增强 Bot 的感官，使其能够理解并处理图片、音频等多模态输入。
+### 3) 运行配置中心
 
----
+```bash
+python scripts/monitor_web.py
+```
 
-## 🤝 贡献与反馈
+默认监听 `0.0.0.0:8000`，浏览器打开：
 
-本项目仍处于探索阶段，欢迎任何关于 AI 记忆架构和安全性的讨论。如果你有好的想法，欢迎提交 Issue 或 Pull Request。
+- `http://<你的服务器IP>:8000`
 
+## API
 
-## 🛠️ 推荐工具
+- `GET /api/v2/config`：获取配置（默认 masked）
+- `PATCH /api/v2/config/{section}`：更新分组
+- `GET /api/v2/config/schema`：获取 schema（前端自动渲染表单）
 
-本项目推荐使用 **Lim Code** 进行 AI 辅助开发。
-
-- **名称**: Lim Code
-- **ID**: `Lianues.limcode`
-- **说明**: Lim Code 是一个 AI 编程助手插件，支持多模态和复杂功能，能够完美解析本项目中的 `LIMCODE.md` 与记忆上下文。
-- **发布者**: Limerence
-- **下载地址**: [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=Lianues.limcode)

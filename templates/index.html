@@ -3,53 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 交互监控与配置管理</title>
+    <title>Moebot V2 配置中心</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@6.0.0/css/all.min.css" rel="stylesheet">
     <link href="{{ url_for('static', path='css/monitor.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gradient-to-br from-amber-50 via-stone-50 to-emerald-50 min-h-screen">
-    <div class="flex h-screen">
-        {% include 'components/sidebar.html' %}
-
-        <!-- 主内容区域 -->
-        <div class="flex-1 overflow-auto">
-            <div class="p-8">
-                {% include 'components/dashboard.html' %}
-                {% include 'components/ai_logs.html' %}
-                {% include 'components/ai_decisions.html' %}
-                {% include 'components/config_changes.html' %}
-                {% include 'components/config.html' %}
-                {% include 'components/config_v2.html' %}
-                {% include 'components/personas.html' %}
-                {% include 'components/memories.html' %}
-                {% include 'components/prompts.html' %}
-            </div>
+    <div class="min-h-screen">
+        <div class="max-w-6xl mx-auto p-8">
+            {% include 'components/config_v2.html' %}
         </div>
     </div>
 
-    <!-- 模态框组 -->
-    {% include 'components/add_persona_modal.html' %}
-    {% include 'components/edit_persona_modal.html' %}
-    {% include 'components/add_trait_modal.html' %}
+    <!-- 通用模态框 -->
     {% include 'components/detail_modal.html' %}
-    {% include 'components/manage_chat_history_modal.html' %}
-    {% include 'components/manage_episodic_modal.html' %}
-    {% include 'components/manage_impressions_modal.html' %}
 
     <!-- 脚本引用 -->
     <script src="{{ url_for('static', path='js/utils.js') }}"></script>
     <script src="{{ url_for('static', path='js/api.js') }}"></script>
-    <script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
-    <script src="{{ url_for('static', path='js/logs.js') }}"></script>
-    <script src="{{ url_for('static', path='js/config.js') }}"></script>
     <script src="{{ url_for('static', path='js/config_v2.js') }}"></script>
-    <script src="{{ url_for('static', path='js/personas_traits.js') }}"></script>
-    <script src="{{ url_for('static', path='js/personas.js') }}"></script>
-    <script src="{{ url_for('static', path='js/memories_chat.js') }}"></script>
-    <script src="{{ url_for('static', path='js/memories_episodic.js') }}"></script>
-    <script src="{{ url_for('static', path='js/memories.js') }}"></script>
-    <script src="{{ url_for('static', path='js/prompts.js') }}"></script>
-    <script src="{{ url_for('static', path='js/main.js') }}"></script>
 </body>
 </html>
