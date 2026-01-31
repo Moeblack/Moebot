@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 case 'ai-decisions': loadAIDecisions(); break;
                 case 'config-changes': loadConfigChanges(); break;
                 case 'config': loadConfig(); break;
+                case 'config-v2': if (typeof loadConfigV2Page === 'function') loadConfigV2Page(); break;
                 case 'personas': loadPersonas(); break;
                 case 'memories': loadMemories(); break;
                 case 'prompts': loadPrompts(); break;

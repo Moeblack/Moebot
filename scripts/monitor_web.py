@@ -25,6 +25,7 @@ from fastapi.staticfiles import StaticFiles
 import sqlite3
 import json
 import uvicorn
+from pathlib import Path
 
 app = FastAPI(title="AI Interaction Monitor")
 
@@ -33,6 +34,25 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 DB_PATH = "data/ai_monitor.db"
+
+def _enable_config_v2_routes() -> None:
+    """
+    将 Moebot V2 的 /api/v2/config 路由挂到现有监控后台上。
+    这样前端 `static/js/config_v2.js` 可以直接工作。
+    """
+    try:
+        from moebot_v2.core.config_store import ConfigStore
+        from moebot_v2.gateway.routes.config import create_config_router
+
+        base_dir = Path(os.getcwd())
+        store = ConfigStore(yaml_path=base_dir / "config_v2.yaml", env_path=base_dir / ".env")
+        app.include_router(create_config_router(store=store, base_dir=base_dir), prefix="/api/v2")
+        print("[monitor_web] enabled Moebot V2 config routes at /api/v2/config")
+    except Exception as e:
+        # 不让监控后台因为 v2 未就绪而启动失败
+        print(f"[monitor_web] WARN: cannot enable v2 config routes: {e}")
+
+_enable_config_v2_routes()
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)

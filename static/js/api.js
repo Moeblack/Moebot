@@ -159,5 +159,45 @@ const API = {
             body: JSON.stringify(data)
         });
         return await response.json();
-    }
+    },
+
+    // ----------------------------
+    // V2 Config API
+    // ----------------------------
+    async getConfigV2(masked = true) {
+        const response = await fetch(`/api/v2/config?masked=${masked ? 'true' : 'false'}`);
+        return await response.json();
+    },
+    async getConfigV2Schema() {
+        const response = await fetch('/api/v2/config/schema');
+        return await response.json();
+    },
+    async getConfigV2Section(section) {
+        const response = await fetch(`/api/v2/config/${encodeURIComponent(section)}`);
+        return await response.json();
+    },
+    async patchConfigV2Section(section, data) {
+        const response = await fetch(`/api/v2/config/${encodeURIComponent(section)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data || {})
+        });
+        return await response.json();
+    },
+    async testConfigV2(section) {
+        const response = await fetch(`/api/v2/config/test/${encodeURIComponent(section)}`, { method: 'POST' });
+        return await response.json();
+    },
+    async exportConfigV2() {
+        const response = await fetch('/api/v2/config/export');
+        return await response.json();
+    },
+    async importConfigV2(config) {
+        const response = await fetch('/api/v2/config/import', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ config })
+        });
+        return await response.json();
+    },
 };

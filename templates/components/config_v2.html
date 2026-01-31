@@ -1,0 +1,141 @@
+<!-- V2 配置中心 -->
+<div id="config-v2" class="content-section">
+    <div class="mb-6 flex items-end justify-between gap-4 flex-wrap">
+        <div>
+            <h2 class="text-4xl font-bold text-gray-900 tracking-tight">
+                <i class="fas fa-sliders-h mr-3"></i>V2 配置中心
+            </h2>
+            <p class="text-gray-600 text-lg">
+                一站式管理 Moebot V2：LLM / Embedding / Gateway / Node-Host / Memory / Security …
+            </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button id="cfgv2-btn-export" class="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 shadow-sm transition">
+                <i class="fas fa-file-export mr-2 text-gray-700"></i>导出
+            </button>
+            <button id="cfgv2-btn-import" class="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 shadow-sm transition">
+                <i class="fas fa-file-import mr-2 text-gray-700"></i>导入
+            </button>
+            <button id="cfgv2-btn-refresh" class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-900 shadow-sm transition">
+                <i class="fas fa-sync-alt mr-2"></i>刷新
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- 左侧：分组导航 -->
+        <div class="lg:col-span-3">
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="px-5 py-4 border-b border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm font-semibold text-gray-900 tracking-wide">配置分组</div>
+                        <span id="cfgv2-status-pill" class="badge bg-gray-700 text-white">未加载</span>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        每个分组单独保存，支持局部更新。
+                    </div>
+                </div>
+                <div id="cfgv2-nav" class="p-2 space-y-1">
+                    <div class="p-3 rounded-lg bg-gray-50 text-gray-500">
+                        <i class="fas fa-hourglass-half mr-2"></i>正在加载…
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="px-5 py-4 border-b border-gray-100">
+                    <div class="text-sm font-semibold text-gray-900 tracking-wide">快捷动作</div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        用于联通性验证与敏感信息管理。
+                    </div>
+                </div>
+                <div class="p-5 space-y-3">
+                    <button id="cfgv2-btn-test-llm" class="w-full px-4 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition text-left">
+                        <i class="fas fa-bolt mr-2 text-amber-600"></i>测试 LLM 连接
+                        <div class="text-xs text-gray-500 mt-1">探测 `llm.base_url` 可达性</div>
+                    </button>
+                    <button id="cfgv2-btn-test-emb" class="w-full px-4 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition text-left">
+                        <i class="fas fa-magnet mr-2 text-emerald-600"></i>测试 Embedding 连接
+                        <div class="text-xs text-gray-500 mt-1">探测 `embeddings.base_url` 可达性</div>
+                    </button>
+                    <div class="pt-2 text-xs text-gray-500 leading-relaxed">
+                        API Key 会在界面中遮蔽显示，保存时会写入 `.env`，不会落到 YAML。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：表单面板 -->
+        <div class="lg:col-span-9">
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between gap-4 flex-wrap">
+                    <div>
+                        <div class="text-sm font-semibold text-gray-900 tracking-wide" id="cfgv2-panel-title">—</div>
+                        <div class="text-xs text-gray-500 mt-1" id="cfgv2-panel-subtitle">选择左侧分组开始编辑</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="cfgv2-btn-advanced" class="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition">
+                            <i class="fas fa-code mr-2"></i>高级模式
+                        </button>
+                        <button id="cfgv2-btn-save" class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-900 transition">
+                            <i class="fas fa-save mr-2"></i>保存当前分组
+                        </button>
+                    </div>
+                </div>
+
+                <div class="px-6 py-6">
+                    <!-- 表单容器 -->
+                    <div id="cfgv2-form" class="space-y-5">
+                        <div class="py-10 text-center text-gray-400">
+                            <i class="fas fa-hand-point-left mb-3 text-4xl block"></i>
+                            从左侧选一个分组，右侧会自动生成表单。
+                        </div>
+                    </div>
+
+                    <!-- 高级 JSON 编辑器 -->
+                    <div id="cfgv2-advanced" class="hidden">
+                        <div class="text-xs text-gray-500 mb-2">
+                            高级模式：直接编辑该分组 JSON（保存时仍会做后端校验）。
+                        </div>
+                        <textarea id="cfgv2-advanced-editor" class="w-full h-96 font-mono text-sm p-4 bg-gray-950 text-emerald-300 rounded-xl border border-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 shadow-inner"></textarea>
+                    </div>
+
+                    <!-- 操作反馈 -->
+                    <div id="cfgv2-toast" class="mt-6 hidden">
+                        <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700">
+                            <i class="fas fa-info-circle mr-2"></i><span id="cfgv2-toast-text"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入弹窗（复用简单 inline modal） -->
+    <div id="cfgv2-import-modal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-2xl w-11/12 md:w-3/4 lg:w-1/2 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <div class="font-semibold text-gray-900">
+                    <i class="fas fa-file-import mr-2"></i>导入配置（JSON）
+                </div>
+                <button id="cfgv2-import-close" class="text-gray-500 hover:text-gray-900">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="text-xs text-gray-500 mb-2">
+                    粘贴 `{\"config\": {...}}` 或直接粘贴 `{...}`（系统会自动包一层）。
+                </div>
+                <textarea id="cfgv2-import-editor" class="w-full h-64 font-mono text-sm p-4 bg-gray-950 text-emerald-300 rounded-xl border border-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 shadow-inner"></textarea>
+                <div class="mt-4 flex items-center justify-end gap-2">
+                    <button id="cfgv2-import-cancel" class="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition">取消</button>
+                    <button id="cfgv2-import-confirm" class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-900 transition">
+                        <i class="fas fa-cloud-upload-alt mr-2"></i>导入并应用
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

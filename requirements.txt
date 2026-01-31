@@ -9,3 +9,7 @@ jinja2
 python-multipart
 python-dotenv
 Pillow
+pytest
+pytest-asyncio
+aiosqlite
+watchdog
